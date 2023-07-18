@@ -2,15 +2,16 @@ from django.db import models
 from django.contrib.auth.models import User
 
 class MessageBoard(models.Model):
-    subject = models.CharField(max_length=300)
-    date_added = models.TimeField(auto_now_add=True)    
-    posts = models.CharField(max_length=300)
+    subject = models.CharField(max_length=300, default='')
+    # date_added = models.TimeField(auto_now_add=True)    
+    posts = models.CharField(max_length=300, default='')
+    school_class = models.CharField(max_length=200, default='')
 
     def __str__(self):
         return self.subject
     
     class Meta:
-        ordering = ['date_added', 'subject']
+        ordering = ['subject']
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -23,6 +24,7 @@ class UserProfile(models.Model):
     parents = models.CharField(max_length=255, default='')
     students = models.CharField(max_length=255, default='')
     teachers = models.CharField(max_length=255, default='')
+    school_class = models.CharField(max_length=200, default='')
 
     def __str__(self):
         return self.first_name
