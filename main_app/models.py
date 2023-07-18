@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 class MessageBoard(models.Model):
     subject = models.CharField(max_length=300, default='')
     # date_added = models.TimeField(auto_now_add=True)    
-    posts = models.CharField(max_length=300, default='')
+    # posts = models.CharField(max_length=300, default='')
     school_class = models.CharField(max_length=200, default='')
 
     def __str__(self):
@@ -28,3 +28,11 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return self.first_name
+    
+class Post(models.Model):
+    title = models.CharField(max_length=150)
+    content = models.TextField(max_length=750)
+    messageboard = models.ForeignKey(MessageBoard, on_delete=models.CASCADE, related_name="post")
+
+    def __str__(self):
+        return self.title

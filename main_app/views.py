@@ -1,9 +1,9 @@
 from django.views.generic.base import TemplateView
-from django.shortcuts import render
-from django.views import View # <- View class to handle requests
+from django.shortcuts import render, redirect
+from django.views import View
 from django.http import HttpResponse 
-from .models import MessageBoard
-from django.views.generic.edit import CreateView, UpdateView
+from .models import MessageBoard, Post
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import DetailView
 from django.urls import reverse
 
@@ -32,7 +32,7 @@ class MessageBoards(TemplateView):
 
 class MessageBoardsCreate(CreateView):
     model = MessageBoard
-    fields = ['subject', 'posts', 'school_class']
+    fields = ['subject', 'post', 'school_class']
     template_name = "messageboards_create.html"
 
     def get_success_url(self):
@@ -44,11 +44,25 @@ class MessageBoardsDetail(DetailView):
 
 class MessageBoardsUpdate(UpdateView):
     model = MessageBoard
-    fields = ['subject', 'posts', 'school_class']
+    fields = ['subject', 'post', 'school_class']
     template_name = "messageboards_update.html"
 
     def get_success_url(self):
         return reverse('messageboards_detail', kwargs={'pk': self.object.pk})
+    
+class MessageBoardsDelete(DeleteView):
+    model = MessageBoard
+    template_name = "messageboards_delete_confirmation.html"
+    success_url = "/messageboards/"
+
+class PostCreate(View):
+    def post(self, request, pk):
+        title = request.POST.get("title")
+        content = request.POST.get("content")
+        messageboard = MessageBoard.objects.get(pk=pk)
+        Post.objects.create(title=title, content=content, messageboard=messageboard)
+        return redirect('messageboards_detail', pk=pk)
 
 class Login(TemplateView):
     template_name = "login.html"
+
