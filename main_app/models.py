@@ -1,8 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-
-
 class SchoolClass(models.Model):
     school = models.CharField(max_length=255, default="")
     grade = models.CharField(max_length=20, default="")

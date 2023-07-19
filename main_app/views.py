@@ -2,7 +2,7 @@ from django.views.generic.base import TemplateView
 from django.shortcuts import render, redirect
 from django.views import View
 from django.http import HttpResponse 
-from .models import MessageBoard, Post, SchoolClass
+from .models import MessageBoard, Post, SchoolClass, UserProfile
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import DetailView
 from django.urls import reverse
@@ -12,14 +12,13 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 
 
-# Create your views here.
-
 class Home(TemplateView):
     template_name = "home.html"
 
 
 class About(TemplateView):
     template_name = "about.html"
+
 
 @method_decorator(login_required, name='dispatch')
 class MessageBoards(TemplateView):
@@ -35,35 +34,41 @@ class MessageBoards(TemplateView):
             context["messageboards"] = MessageBoard.objects.filter(user_profile=self.request.user.userprofile)
         return context
 
+
 class MessageBoardsCreate(CreateView):
     model = MessageBoard
-    fields = ['name', 'topics']
+    fields = ['name', 'topics', 'school_class', 'user_profile']
     template_name = "messageboards_create.html"
 
     def form_valid(self, form):
-        form.instance.user_profile = self.request.user.userprofile
-        return super(MessageBoardsCreate, self).form_valid(form)
+        form.instance.save()
+        form.instance.user_profile.set([self.request.user.userprofile])
+        return super().form_valid(form)
 
     def get_success_url(self):
         print(self.kwargs)
         return reverse('messageboards_detail', kwargs={'pk': self.object.pk})
 
+
 class MessageBoardsDetail(DetailView):
     model = MessageBoard
     template_name = "messageboards_detail.html"
 
+
 class MessageBoardsUpdate(UpdateView):
     model = MessageBoard
-    fields = ['name', 'topics']
+    fields = ['name', 'topics', 'school_class', 'user_profile']
     template_name = "messageboards_update.html"
 
     def get_success_url(self):
         return reverse('messageboards_detail', kwargs={'pk': self.object.pk})
     
+
 class MessageBoardsDelete(DeleteView):
     model = MessageBoard
     template_name = "messageboards_delete_confirmation.html"
     success_url = "/messageboards/"
+
 
 @method_decorator(login_required, name='dispatch')
 class PostCreate(View):
@@ -74,6 +79,7 @@ class PostCreate(View):
         messageboard = MessageBoard.objects.get(pk=pk)
         Post.objects.create(title=title, content=content, posting_user=posting_user, messageboard=messageboard)
         return redirect('messageboards_detail', pk=pk)
+
 
 @method_decorator(login_required, name='dispatch')
 class SchoolClasses(TemplateView):
@@ -86,6 +92,7 @@ class SchoolClasses(TemplateView):
             context["schoolclasses"] = SchoolClass.objects.filter(users__in=[user_profile])
         return context
     
+
 class SchoolClassesCreate(CreateView):
     model = SchoolClass
     fields = ['school', 'grade', 'school_type']
@@ -94,9 +101,11 @@ class SchoolClassesCreate(CreateView):
     def get_success_url(self):
         return reverse('schoolclasses_detail', kwargs={'pk': self.object.pk})
     
+
 class SchoolClassesDetail(DetailView):
     model = SchoolClass
     template_name = "schoolclasses_detail.html"
+
 
 class Signup(View):
     # show a form to fill out
@@ -114,4 +123,3 @@ class Signup(View):
         else:
             context = {"form": form}
             return render(request, "registration/signup.html", context)
-

@@ -11,24 +11,24 @@
     </form>
     <a class="btn btn-primary mb-3" href="{% url 'messageboards_create' %}">Add New Message Board</a>
 </div>
-<table class="table table-hover">
-    <thead>
-        <tr>
-            <th scope="col">School:</th>
-            <th scope="col">Name of Message Board</th>
-            <th scope="col">Related Topics</th>
-        </tr>
+<div class="container">
+  <table class="table table-striped">
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">School</th>
+        <th scope="col">Name of Message Board</th>
+        <th scope="col">Related Topics</th>
+      </tr>
     </thead>
     <tbody>
-        {% for messageboard in messageboards %}
-        <tr class="table-active">
-            <td>{{messageboard.school_class.school}}</td>
-            <th scope="row">
-                <a href="{% url 'messageboards_detail' messageboard.pk %}">{{messageboard.name}}</a>
-            </th>
-            <td>{{messageboard.topics}}</td>
-        </tr>
-        {% endfor %}
+      {% for messageboard in messageboards %}
+      <tr>
+        <td>{{ messageboard.school_class.school }}</td>
+        <td><a href="{% url 'messageboards_detail' messageboard.pk %}">{{ messageboard.name }}</a></td>
+        <td>{{ messageboard.topics }}</td>
+      </tr>
+      {% endfor %}
     </tbody>
-</table>
+  </table>
+</div>
 {% endblock %}

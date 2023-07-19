@@ -1,9 +1,9 @@
 {% extends 'base.html' %} {% block content %}
 
-<h2 class="mx-auto p-2" style="width: 200px;">Log In</h2>
-<form method="post" action="{% url 'login' %}">
+<h2 class="mx-auto p-2 text-center" style="width: 200px;">Log In</h2>
+<form method="post" class="text-center p-4" action="{% url 'login' %}">
     {% csrf_token %} {{ form.as_p }}
-    <input type="submit" class="btn" value="login" />
+    <input type="submit" class="btn-primary" value="Login" />
     <input type="hidden" name="next" value="{{ next }}" />
 </form>
 
