@@ -78,20 +78,23 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'connected_project.wsgi.application'
 
-CORS_ALLOW_ALL_ORIGINS = True
+# CORS_ALLOW_ALL_ORIGINS = True
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'connected',
-        'USER': os.environ['DB_USER'],
-        'PASSWORD': os.environ['DB_PW'],
-        'HOST': os.environ['DB_HOST'],
-        'PORT': '5432',
-    }
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.postgresql',
+    #     'NAME': 'connected',
+    #     'USER': os.environ['DB_USER'],
+    #     'PASSWORD': os.environ['DB_PW'],
+    #     'HOST': os.environ['DB_HOST'],
+    #     'PORT': '5432',
+    # }
+    'default': dj_database_url.config(
+        conn_max_age=600, conn_health_checks=True
+    )
 }
 
 
