@@ -6,11 +6,11 @@
 <table class="table table-hover">
     <thead>
       <tr>
-        <th scope="col">Subject</th>
-        <th scope="col">Class</th>
-        <th scope="col">Date Added</th>
+        <th scope="col">Name of Message Board</th>
+        <th scope="col">Related Topics</th>
+        <th scope="col">School</th>
         <form class="d-flex" method="get">
-            <input class="form-control me-sm-2 input" type="text" name="subject" placeholder="Search by Subject"/>
+            <input class="form-control me-sm-2 input" type="text" name="name" placeholder="Search by Name"/>
             <input class="btn btn-secondary my-2 my-sm-0" type="submit" value="Search" />
             <a class="btn btn-secondary my-2 my-sm-0" href="{% url 'messageboards' %}">Clear Search</a>
         </form>
@@ -22,9 +22,9 @@
             <tr class="table-active" >
                 <th scope="row">
                     <a href="{% url 'messageboards_detail' messageboard.pk %}">{{messageboard.name}}</a>
-                </th>               
-                <td>{{messageboard.topics}}</td>
-                <td>{{messageboard.posts}}</td>
+                </th>        
+                <td>{{messageboard.topics}}</td>       
+                <td>{{messageboard.school_class.school}}</td>
             </tr>
       {% endfor %}
     </tbody>

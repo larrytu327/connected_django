@@ -6,6 +6,10 @@ from .models import MessageBoard, Post, SchoolClass
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import DetailView
 from django.urls import reverse
+from django.contrib.auth import login
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 
 
 # Create your views here.
@@ -17,17 +21,18 @@ class Home(TemplateView):
 class About(TemplateView):
     template_name = "about.html"
 
+@method_decorator(login_required, name='dispatch')
 class MessageBoards(TemplateView):
     template_name = "messageboards.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        subject = self.request.GET.get("subject")
-        if subject != None:
-            context["messageboards"] = MessageBoard.objects.filter(subject__icontains=subject)
+        name = self.request.GET.get("name")
+        if name != None:
+            context["messageboards"] = MessageBoard.objects.filter(name__icontains=name, user_profile=self.request.user.userprofile)
 
         else:
-            context["messageboards"] = MessageBoard.objects.all()
+            context["messageboards"] = MessageBoard.objects.filter(user_profile=self.request.user.userprofile)
         return context
 
 class MessageBoardsCreate(CreateView):
@@ -35,7 +40,12 @@ class MessageBoardsCreate(CreateView):
     fields = ['name', 'topics', 'date_added', 'school_class']
     template_name = "messageboards_create.html"
 
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super(MessageBoardsCreate, self).form_valid(form)
+
     def get_success_url(self):
+        print(self.kwargs)
         return reverse('messageboards_detail', kwargs={'pk': self.object.pk})
 
 class MessageBoardsDetail(DetailView):
@@ -63,9 +73,6 @@ class PostCreate(View):
         Post.objects.create(title=title, content=content, messageboard=messageboard)
         return redirect('messageboards_detail', pk=pk)
 
-class Login(TemplateView):
-    template_name = "login.html"
-
 class SchoolClasses(TemplateView):
     template_name = "schoolclasses.html"
 
@@ -90,3 +97,21 @@ class SchoolClassesCreate(CreateView):
 class SchoolClassesDetail(DetailView):
     model = SchoolClass
     template_name = "schoolclasses_detail.html"
+
+class Signup(View):
+    # show a form to fill out
+    def get(self, request):
+        form = UserCreationForm()
+        context = {"form": form}
+        return render(request, "registration/signup.html", context)
+    # on form submit, validate the form and login the user.
+    def post(self, request):
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect("messageboards")
+        else:
+            context = {"form": form}
+            return render(request, "registration/signup.html", context)
+

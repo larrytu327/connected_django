@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+
+
 class SchoolClass(models.Model):
     school = models.CharField(max_length=255, default="")
     grade = models.CharField(max_length=20, default="")
@@ -11,19 +13,6 @@ class SchoolClass(models.Model):
     
     class Meta:
         ordering = ['school', 'grade']
-
-class MessageBoard(models.Model):
-    name =  models.CharField(max_length=300, default='')
-    topics = models.CharField(max_length=300, default='')
-    date_added = models.TimeField(auto_now_add=True)
-    school_class = models.ForeignKey(SchoolClass, on_delete=models.CASCADE, related_name="messageboard", default="")    
-    # posts = models.CharField(max_length=300, default='')    
-
-    def __str__(self):
-        return self.name
-    
-    class Meta:
-        ordering = ['topics']
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -40,6 +29,20 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return self.first_name
+
+class MessageBoard(models.Model):
+    name =  models.CharField(max_length=300, default='')
+    topics = models.CharField(max_length=300, default='')
+    # date_added = models.DateTimeField(auto_now_add=True)
+    school_class = models.ForeignKey(SchoolClass, on_delete=models.CASCADE, related_name="messageboard", default="")
+    user_profile = models.ManyToManyField(UserProfile)
+    # posts = models.CharField(max_length=300, default='')    
+
+    def __str__(self):
+        return self.name
+    
+    class Meta:
+        ordering = ['topics']
     
 class Post(models.Model):
     title = models.CharField(max_length=150)
