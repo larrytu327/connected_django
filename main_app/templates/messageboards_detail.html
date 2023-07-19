@@ -2,8 +2,8 @@
 {% block content %}
 <h2 class="mx-auto p-2" style="width: 400px;">{{messageboard.subject}}</h2>
 <h3 class="mx-auto p-2" style="width: 400px"> {{messageboard.school_class}}</h3>
-<a href="{% url 'messageboards_update' messageboard.pk %}" lass="btn btn-secondary my-2 my-sm-0"> Edit Message Board </a>
-<a href="{% url 'messageboards_delete' messageboard.pk %}" class="button is-danger">Delete</a>
+<button type="button" href="{% url 'messageboards_update' messageboard.pk %}" class="btn btn-primary my-2 my-sm-0"> Edit Message Board </button>
+<button type="button" href="{% url 'messageboards_delete' messageboard.pk %}" class="btn btn-danger my-2 my-sm-0">Delete</button>
 <div class="accordion" id="accordionExample">
     {% for post in messageboard.post.all %}
     <div class="accordion-item">

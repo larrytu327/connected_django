@@ -1,17 +1,29 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-class MessageBoard(models.Model):
-    subject = models.CharField(max_length=300, default='')
-    # date_added = models.TimeField(auto_now_add=True)    
-    # posts = models.CharField(max_length=300, default='')
-    school_class = models.CharField(max_length=200, default='')
+class SchoolClass(models.Model):
+    school = models.CharField(max_length=255, default="")
+    grade = models.CharField(max_length=20, default="")
+    school_type = models.CharField(max_length=255, default="")
 
     def __str__(self):
-        return self.subject
+        return self.school
     
     class Meta:
-        ordering = ['subject']
+        ordering = ['school', 'grade']
+
+class MessageBoard(models.Model):
+    name =  models.CharField(max_length=300, default='')
+    topics = models.CharField(max_length=300, default='')
+    date_added = models.TimeField(auto_now_add=True)
+    school_class = models.ForeignKey(SchoolClass, on_delete=models.CASCADE, related_name="messageboard", default="")    
+    # posts = models.CharField(max_length=300, default='')    
+
+    def __str__(self):
+        return self.name
+    
+    class Meta:
+        ordering = ['topics']
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -24,7 +36,7 @@ class UserProfile(models.Model):
     parents = models.CharField(max_length=255, default='')
     students = models.CharField(max_length=255, default='')
     teachers = models.CharField(max_length=255, default='')
-    school_class = models.CharField(max_length=200, default='')
+    school_class = models.ManyToManyField(SchoolClass)
 
     def __str__(self):
         return self.first_name
@@ -36,3 +48,4 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title
+    

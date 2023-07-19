@@ -21,13 +21,15 @@
         {% for messageboard in messageboards %}
             <tr class="table-active" >
                 <th scope="row">
-                    <a href="{% url 'messageboards_detail' messageboard.pk %}">{{messageboard.subject}}</a>
+                    <a href="{% url 'messageboards_detail' messageboard.pk %}">{{messageboard.name}}</a>
                 </th>               
-                <td>{{messageboard.school_class}}</td>
+                <td>{{messageboard.topics}}</td>
                 <td>{{messageboard.posts}}</td>
             </tr>
       {% endfor %}
     </tbody>
   </table>
 {% endblock %}
+
+
 

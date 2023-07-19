@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2 class="mx-auto p-2" style="width: 200px;">
+    Schools and Classes
+</h2>
+<table class="table table-hover">
+    <thead>
+      <tr>
+        <th scope="col">School</th>
+        <th scope="col">School Type</th>
+        <form class="d-flex" method="get">
+            <input class="form-control me-sm-2 input" type="text" name="school" placeholder="Search by School Name"/>
+            <input class="btn btn-secondary my-2 my-sm-0" type="submit" value="Search" />
+            <a class="btn btn-secondary my-2 my-sm-0" href="{% url 'schoolclasses' %}">Clear Search</a>
+        </form>
+        <a class="btn btn-primary" href="{% url 'schoolclasses_create' %}">Add New School</a>
+      </tr>
+    </thead>
+    <tbody>
+        {% for schoolclass in schoolclasses %}
+            <tr class="table-active" >
+                <th scope="row">
+                    <a href="{% url 'schoolclasses_detail' schoolclass.pk %}">{{schoolclass.school}}</a>
+                </th>               
+                <td>{{schoolclass.school_type}}</td>
+            </tr>
+      {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
