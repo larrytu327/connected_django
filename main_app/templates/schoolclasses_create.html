@@ -1,16 +1,20 @@
 {% extends 'base.html' %} 
 {% block content %}
-<h2 class="mx-auto p-2" style="width: 500px;">
-    Add a New School
-</h2>
-
-<form method="post">
-<!-- Security Feature  -->
-  {% csrf_token %} 
-<!--  Generate inputs  -->
-  {{form.as_p}} 
-<!--  Submit form  -->
-  <input type="submit" value="Submit" />
-</form>
-
+<div class="container d-flex justify-content-center p-5">
+  <div class="card border-primary mb-3" style="max-width: 30rem;">
+    <div class="card-header text-center">Add a New School</div>
+    <div class="card-body">
+      <form method="post">
+        <!-- Security Feature  -->
+        {% csrf_token %} 
+        <!--  Generate inputs  -->
+        {{form.as_p}} 
+        <!--  Submit form  -->
+        <div class="text-center">
+          <input class="btn btn-primary" type="submit" value="Submit" />
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
 {% endblock %}

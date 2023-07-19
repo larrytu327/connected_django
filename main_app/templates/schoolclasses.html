@@ -1,19 +1,26 @@
 {% extends 'base.html' %}
 {% block content %}
-<h2 class="mx-auto p-2" style="width: 200px;">
+<h2 class="text-center mx-auto p-2" style="width: 500px;">
     Schools and Classes
 </h2>
+<form class="d-flex" method="get">
+    <input class="form-control me-sm-2 input" style="border-color: #343a40;" type="text" name="school" placeholder="Search by School Name"/>
+    <div class="p-2">
+        <input class="btn btn-primary my-2 my-sm-0" type="submit" value="Search" />
+    </div>
+    <div class="p-2">
+        <a class="btn btn-primary my-2 my-sm-0" href="{% url 'schoolclasses' %}">Clear</a>
+    </div>
+</form>
+<div class="text-center p-3">
+<a class="btn btn-primary" href="{% url 'schoolclasses_create' %}">Add New School</a>
+</div>
 <table class="table table-hover">
     <thead>
       <tr>
         <th scope="col">School</th>
         <th scope="col">School Type</th>
-        <form class="d-flex" method="get">
-            <input class="form-control me-sm-2 input" type="text" name="school" placeholder="Search by School Name"/>
-            <input class="btn btn-secondary my-2 my-sm-0" type="submit" value="Search" />
-            <a class="btn btn-secondary my-2 my-sm-0" href="{% url 'schoolclasses' %}">Clear Search</a>
-        </form>
-        <a class="btn btn-primary" href="{% url 'schoolclasses_create' %}">Add New School</a>
+
       </tr>
     </thead>
     <tbody>
