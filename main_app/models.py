@@ -25,8 +25,8 @@ class UserProfile(models.Model):
     parents = models.CharField(max_length=255, default='')
     students = models.CharField(max_length=255, default='')
     teachers = models.CharField(max_length=255, default='')
-    school_class = models.ManyToManyField(SchoolClass)
-
+    school_class = models.ManyToManyField(SchoolClass, related_name='users', blank=True)
+    
     def __str__(self):
         return self.first_name
 
@@ -45,8 +45,9 @@ class MessageBoard(models.Model):
         ordering = ['topics']
     
 class Post(models.Model):
-    title = models.CharField(max_length=150)
-    content = models.TextField(max_length=750)
+    title = models.CharField(max_length=150, default='')
+    content = models.TextField(max_length=750, default='')
+    posting_user = models.CharField(max_length=200, default='')
     messageboard = models.ForeignKey(MessageBoard, on_delete=models.CASCADE, related_name="post")
 
     def __str__(self):

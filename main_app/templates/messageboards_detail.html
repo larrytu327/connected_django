@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
 {% block content %}
-<h2 class="mx-auto p-2" style="width: 400px;">{{messageboard.subject}}</h2>
+<h2 class="mx-auto p-2" style="width: 400px;">{{messageboard.name}}</h2>
 <h3 class="mx-auto p-2" style="width: 400px"> {{messageboard.school_class}}</h3>
-<button type="button" href="{% url 'messageboards_update' messageboard.pk %}" class="btn btn-primary my-2 my-sm-0"> Edit Message Board </button>
-<button type="button" href="{% url 'messageboards_delete' messageboard.pk %}" class="btn btn-danger my-2 my-sm-0">Delete</button>
+<a type="button" href="{% url 'messageboards_update' messageboard.pk %}" class="btn btn-primary my-2 my-sm-0"> Edit Message Board </a>
+<a type="button" href="{% url 'messageboards_delete' messageboard.pk %}" class="btn btn-danger my-2 my-sm-0">Delete</a>
 <div class="accordion" id="accordionExample">
     {% for post in messageboard.post.all %}
     <div class="accordion-item">
@@ -14,7 +14,7 @@
       </h2>
       <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample" style="">
         <div class="accordion-body">
-          {{post.content}}
+          Posted by {{post.posting_user}}: {{post.content}}
         </div>
       </div>
     </div>

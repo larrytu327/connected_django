@@ -37,11 +37,11 @@ class MessageBoards(TemplateView):
 
 class MessageBoardsCreate(CreateView):
     model = MessageBoard
-    fields = ['name', 'topics', 'date_added', 'school_class']
+    fields = ['name', 'topics']
     template_name = "messageboards_create.html"
 
     def form_valid(self, form):
-        form.instance.user = self.request.user
+        form.instance.user_profile = self.request.user.userprofile
         return super(MessageBoardsCreate, self).form_valid(form)
 
     def get_success_url(self):
@@ -54,7 +54,7 @@ class MessageBoardsDetail(DetailView):
 
 class MessageBoardsUpdate(UpdateView):
     model = MessageBoard
-    fields = ['name', 'topics', 'date_added', 'school_class']
+    fields = ['name', 'topics']
     template_name = "messageboards_update.html"
 
     def get_success_url(self):
@@ -65,30 +65,30 @@ class MessageBoardsDelete(DeleteView):
     template_name = "messageboards_delete_confirmation.html"
     success_url = "/messageboards/"
 
+@method_decorator(login_required, name='dispatch')
 class PostCreate(View):
     def post(self, request, pk):
         title = request.POST.get("title")
         content = request.POST.get("content")
+        posting_user = request.user
         messageboard = MessageBoard.objects.get(pk=pk)
-        Post.objects.create(title=title, content=content, messageboard=messageboard)
+        Post.objects.create(title=title, content=content, posting_user=posting_user, messageboard=messageboard)
         return redirect('messageboards_detail', pk=pk)
 
+@method_decorator(login_required, name='dispatch')
 class SchoolClasses(TemplateView):
     template_name = "schoolclasses.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        school = self.request.GET.get("school")
-        if school != None:
-            context["schoolclasses"] = SchoolClass.objects.filter(school__icontains=school)
-
-        else:
-            context["schoolclasses"] = SchoolClass.objects.all()
+        user_profile = self.request.user.userprofile
+        if user_profile is not None and user_profile.school_class is not None:
+            context["schoolclasses"] = SchoolClass.objects.filter(users__in=[user_profile])
         return context
     
 class SchoolClassesCreate(CreateView):
     model = SchoolClass
-    fields = ['school', 'grades', 'school_type']
+    fields = ['school', 'grade', 'school_type']
     template_name = "schoolclasses_create.html"
 
     def get_success_url(self):
